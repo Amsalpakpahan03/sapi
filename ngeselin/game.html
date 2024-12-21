@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapi Dino Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #gameArea {
+            width: 100%; /* Membuat game responsif */
+            max-width: 600px; /* Ukuran maksimal area game */
+            height: 400px; /* Ukuran tetap */
+            position: relative;
+            background-color: #87CEEB;
+            overflow: hidden;
+        }
+
+        .animal {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            background-size: cover;
+            background-image: url('./asset/sapi.png');
+            background-position: center;
+        }
+
+        #obstacle {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            right: -50px; /* Mulai di luar layar */
+            background-size: cover;
+            background-image: url('./asset/ayam.png');
+            background-position: center;
+            animation: moveObstacle 2s infinite linear;
+        }
+
+        @keyframes moveObstacle {
+            from {
+                right: -50px;
+            }
+            to {
+                right: 100%;
+            }
+        }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="cow" class="animal"></div>
+        <div id="obstacle"></div>
+        <div id="score">Score: 0</div> <!-- Menambahkan elemen skor -->
+    </div>
+
+    <script>
+        const cow = document.getElementById('cow');
+        const obstacle = document.getElementById('obstacle');
+        const scoreElement = document.getElementById('score');
+        let isJumping = false;
+        let score = 0; // Inisialisasi skor
+        let obstacleSpeed = 2; // Kecepatan awal obstacle
+
+        // Fungsi untuk memutar suara saat melompat
+        function playSound() {
+            var audio = new Audio("asset/SAPI.MP3");
+            audio.play().catch((error) => console.error("Error memutar suara:", error));
+        }
+
+        // Fungsi untuk memutar suara saat kalah
+        function playGameOverSound() {
+            var audio = new Audio("asset/kalah.mp3");
+            audio.play().catch((error) => console.error("Error memutar suara kalah:", error));
+        }
+
+        // Menggunakan event touch untuk kontrol di perangkat mobile
+        document.addEventListener('touchstart', (event) => {
+            if (!isJumping) {
+                jump();
+            }
+        });
+
+        // Menggunakan event keydown untuk kontrol di PC (keyboard)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === " " && !isJumping) { // Tombol spasi untuk loncat
+                jump();
+            }
+        });
+
+        function jump() {
+            isJumping = true;
+            let jumpHeight = 0;
+            playSound(); // Panggil fungsi untuk memutar suara saat lompat
+            let jumpInterval = setInterval(() => {
+                if (jumpHeight >= 100) {
+                    clearInterval(jumpInterval);
+                    let fallInterval = setInterval(() => {
+                        if (jumpHeight <= 0) {
+                            clearInterval(fallInterval);
+                            isJumping = false;
+                        }
+                        jumpHeight -= 5;
+                        cow.style.bottom = `${jumpHeight}px`;
+                    }, 25);
+                }
+                jumpHeight += 10;
+                cow.style.bottom = `${jumpHeight}px`;
+            }, 20);
+        }
+
+        function checkCollision() {
+            let cowRect = cow.getBoundingClientRect();
+            let obstacleRect = obstacle.getBoundingClientRect();
+            
+            if (cowRect.left < obstacleRect.right && cowRect.right > obstacleRect.left && cowRect.bottom > obstacleRect.top) {
+                playGameOverSound(); // Panggil suara kalah jika terjadi tabrakan
+                alert("Game Over!");
+                location.reload(); // Me-reload halaman setelah game over
+            }
+        }
+
+        function updateScore() {
+            let obstacleRect = obstacle.getBoundingClientRect();
+            let cowRect = cow.getBoundingClientRect();
+            
+            // Check if the cow passed the obstacle
+            if (obstacleRect.right <= cowRect.left && !obstacle.hasAttribute('passed')) {
+                score++; // Increase score
+                scoreElement.innerText = `Score: ${score}`; // Update score on screen
+                obstacle.setAttribute('passed', true); // Mark obstacle as passed
+                increaseObstacleSpeed(); // Tambah kecepatan obstacle
+            } else if (obstacleRect.right > cowRect.left) {
+                // Reset obstacle passed attribute if the obstacle is not passed
+                obstacle.removeAttribute('passed');
+            }
+        }
+
+        function increaseObstacleSpeed() {
+            // Setiap skor yang bertambah, percepat kecepatan obstacle
+            if (score % 5 === 0) { // Setiap 5 skor, tingkatkan kecepatan
+                obstacleSpeed = Math.max(0.5, obstacleSpeed - 0.2); // Mengurangi waktu animasi untuk mempercepat
+                obstacle.style.animationDuration = `${obstacleSpeed}s`;
+            }
+        }
+
+        function moveObstacle() {
+            let obstacleRect = obstacle.getBoundingClientRect();
+            if (obstacleRect.right <= 0) {
+                // If obstacle goes off screen (left side), reset its position
+                obstacle.style.right = "-50px"; // Start from the right side again
+            }
+        }
+
+        setInterval(() => {
+            checkCollision();
+            updateScore(); // Update score
+            moveObstacle(); // Move obstacle
+        }, 10);
+    </script>
+</body>
+</html>

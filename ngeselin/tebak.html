@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak-Tebakan Ngeselin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        #question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #answer {
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tebak-Tebakan Ngeselin</h1>
+    <div id="question">Apa yang bisa kamu pecahkan tanpa menyentuhnya?</div>
+    <input type="text" id="userInput" placeholder="Jawaban Anda"/>
+    <button class="btn" onclick="checkAnswer()">Kirim</button>
+    
+    <div id="answer"></div>
+
+    <script>
+        let questions = [
+            { question: "Apa yang bisa kamu pecahkan tanpa menyentuhnya?", answer: "janji" },
+            { question: "Apa yang selalu ada di depanmu tetapi tidak bisa dilihat?", answer: "masa depan" },
+            { question: "Kenapa burung tidak bisa masuk ke sekolah?", answer: "tweet" },
+            { question: "Ikan apa yang paling pintar?", answer: "ikan pari" },
+            { question: "Apa yang lebih cepat dari cahaya, tapi tidak bisa dilihat?", answer: "pikiran" }
+        ];
+        let currentQuestionIndex = 0;
+
+        function checkAnswer() {
+            var userAnswer = document.getElementById("userInput").value.toLowerCase();
+            var correctAnswer = questions[currentQuestionIndex].answer;
+
+            if (userAnswer === correctAnswer) {
+                document.getElementById("answer").innerText = "Selamat! Jawaban Anda benar!";
+                currentQuestionIndex = (currentQuestionIndex + 1) % questions.length; // Ganti ke pertanyaan berikutnya
+                document.getElementById("question").innerText = questions[currentQuestionIndex].question; // Tampilkan pertanyaan berikutnya
+                document.getElementById("userInput").value = ""; // Kosongkan input
+            } else {
+                document.getElementById("answer").innerText = "Salah! Coba lagi.";
+            }
+        }
+
+        
+    </script>
+    <script>
+        function gamau(id) {
+          var mau = document.getElementById("btn_mau");
+          var i = Math.floor(Math.random() * 300) + 1;
+          var j = Math.floor(Math.random() * 100) + mau.offsetTop;
+          id.style.left = i + "px";
+          id.style.top = j + "px";
+        }
+      </script>
+
+
+    <h1>Nyerah?</h1>
+    <button id="btn_mau" onclick="alert('IHHH KEREN SAPI INI')">ga</button>&nbsp;
+    <button id="btn_gamau" onclick="gamau(this)" style="position: absolute">
+      iya
+    </button>
+</body>
+</html>

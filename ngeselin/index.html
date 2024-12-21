@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Betmut</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        #question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 200px;
+            margin: 0 auto;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        /* Custom alert box styles */
+        .alert-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
+            width: 70%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .alert-box button {
+            background-color: #721c24;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .alert-box button:hover {
+            background-color: #5a1e1e;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tes Betmut</h1>
+    <div id="question">lagi betmut gak?</div>
+    <div class="options">
+        <button class="btn" onclick="checkAnswer('iya')">A. iya 😡</button>
+        <button class="btn" onclick="checkAnswer('biasa aja')">B. biasa 🙂</button>
+        <button class="btn" onclick="checkAnswer('enggak')">C. enggak 😄</button>
+    </div>
+
+    <div id="result"></div>
+
+    <!-- Custom Alert Box -->
+    <div id="alert-box" class="alert-box">
+        <div id="alert-message"></div>
+        <button onclick="closeAlert()">hmm</button>
+    </div>
+
+    <script>
+        let previousChoice = null; // Menyimpan jawaban sebelumnya
+
+        function checkAnswer(choice) {
+            let result = document.getElementById("result");
+            let alertBox = document.getElementById("alert-box");
+            let alertMessage = document.getElementById("alert-message");
+
+            if (previousChoice && previousChoice !== choice) {
+                alertMessage.innerText = "Dasar plin-plan! kata nya " + previousChoice + ", sekarang berubah ke " + choice + " huuuu dasar sapi";
+                alertBox.style.display = "block";
+            }
+
+            if (choice === 'iya') {
+                result.innerText = "YAAAAAAA BETMUT UTUTUTUTUTU";
+            } else if (choice === 'biasa') {
+                result.innerText = "IIHHHHHH IHHHH KOK BISA";
+            } else if (choice === 'enggak') {
+                result.innerText = "AHH GA ASIK";
+            }
+
+            previousChoice = choice; // Simpan jawaban saat ini sebagai jawaban sebelumnya
+        }
+
+        // Function to close the alert box
+        function closeAlert() {
+            let alertBox = document.getElementById("alert-box");
+            alertBox.style.display = "none";
+        }
+    </script>
+
+    <a href="Tebak_.html">apa nih?</a>
+    <a href="game.html">betmut?</a>
+
+</body>
+</html>

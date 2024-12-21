@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tebak</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #fafafa;
+        text-align: center;
+        padding: 50px;
+        color: #333;
+        box-sizing: border-box;
+        position: relative;
+        /* Menambahkan posisi relatif pada body */
+      }
+
+      #cowImage {
+        width: 300px;
+        /* Menyesuaikan lebar gambar */
+        height: auto;
+        /* Menjaga proporsi gambar */
+        display: none;
+        position: absolute;
+        /* Menampilkan gambar di posisi absolut */
+        top: 50%;
+        /* Posisikan gambar di tengah vertikal */
+        left: 50%;
+        /* Posisikan gambar di tengah horizontal */
+        transform: translate(-50%, -50%);
+        /* Sesuaikan agar tepat di tengah */
+        cursor: pointer;
+        /* Menambahkan kursor pointer saat gambar diklik */
+      }
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 30px;
+        color: #4caf50;
+        text-transform: uppercase;
+      }
+
+      #question {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      #answer {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      #userInput {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        width: 80%;
+        margin-bottom: 20px;
+        outline: none;
+        transition: border 0.3s ease;
+      }
+
+      #userInput:focus {
+        border: 2px solid #4caf50;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        font-size: 18px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        transition: background-color 0.3s ease;
+        margin: 10px;
+      }
+
+      .btn:hover {
+        background-color: #45a049;
+      }
+
+      .btn:active {
+        background-color: #388e3c;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-container {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+      }
+
+      #btn_iya {
+        background-color: #f44336;
+        padding: 20px 40px;
+        font-size: 22px;
+      }
+
+      #btn_iya:hover {
+        background-color: #d32f2f;
+      }
+
+      #btn_gak {
+        background-color: #2196f3;
+        padding: 20px 40px;
+        font-size: 22px;
+      }
+
+      #btn_gak:hover {
+        background-color: #1976d2;
+      }
+
+      .message {
+        color: #ff5722;
+      }
+
+      .message.success {
+        color: #4caf50;
+      }
+
+      .message.error {
+        color: #f44336;
+      }
+
+      .question-container {
+        margin-top: 50px;
+      }
+
+      .alert-container {
+        display: none;
+        /* Awalnya disembunyikan */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: #f44336;
+        /* Warna merah untuk alert */
+        color: white;
+        /* Teks putih */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 9999;
+        /* Pastikan berada di atas konten lainnya */
+        opacity: 0;
+        animation: fadeIn 0.5s forwards;
+        /* Animasi muncul */
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .alert-container button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        color: #f44336;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .alert-container button:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Tebak Kalo Bisa, Pasti Ga Bisa SiH!</h1>
+      <div class="question-container">
+        <div id="question">Apakah huruf keempat dalam abjad?</div>
+        <input type="text" id="userInput" placeholder="Jawaban Anda" />
+        <button class="btn" onclick="checkAnswer()">Kirim</button>
+      </div>
+      <div id="answer" class="message"></div>
+      <h1 id="nyerahQuestion" style="display: none">Nyerah?</h1>
+      <div class="btn-container" id="nyerahBtns" style="display: none">
+        <button id="btn_gak" onclick="showAlert()">Ga</button>
+        <div class="alert-container" id="alertBox">
+          IHHH Keren Sapi Ini
+          <button onclick="closeAlert()">OK</button>
+        </div>
+        <button id="btn_iya" onclick="iya(this); playSound();">Iya</button>
+      </div>
+    </div>
+
+    <h1 id="finalMessage" style="display: none">yeayyy 100</h1>
+    <img
+      id="cowImage"
+      src="asset/IMG_4218.JPG"
+      alt="Gambar Sapi"
+      onclick="playSound()"
+    />
+
+    <script>
+      let questions = [
+        { question: "Apakah huruf keempat dalam abjad?", answer: "a" },
+        { question: "Apa yang ada di ujung langit?", answer: "t" },
+        { question: "sapi betmut suka makan...", answer: "es krim" },
+        { question: "Ada berapa huruf dalam abjad?", answer: "5" },
+        {
+          question: "Di bolak-balik selalu rusak. Hayo, apa itu?",
+          answer: "kasur",
+        },
+      ];
+      let currentQuestionIndex = 0;
+      let wrongAnswerCount = 0;
+      let correctAnswersCount = 0;
+
+      function checkAnswer() {
+        var userAnswer = document
+          .getElementById("userInput")
+          .value.toLowerCase();
+
+        if (userAnswer === "") {
+          document.getElementById("answer").innerText =
+            "Jawaban tidak boleh kosong! Coba isi dulu ya.";
+          document.getElementById("answer").classList.add("error");
+          return;
+        }
+
+        var correctAnswer = questions[currentQuestionIndex].answer;
+
+        if (userAnswer === correctAnswer) {
+          document.getElementById("answer").innerText =
+            "Selamat! Jawaban Anda benar!";
+          document.getElementById("answer").classList.remove("error");
+          document.getElementById("answer").classList.add("success");
+          currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+          document.getElementById("question").innerText =
+            questions[currentQuestionIndex].question;
+          document.getElementById("userInput").value = ""; // Kosongkan input
+          correctAnswersCount++;
+
+          if (correctAnswersCount === questions.length) {
+            showFinalAlert(); // Tampilkan alert otomatis setelah semua pertanyaan terjawab dengan benar
+            setTimeout(() => {
+              window.location.href = "../Pemrog eb/ngeselin/sapi.html";
+            }, 3000); // Redirect after 3 seconds
+          }
+          setTimeout(() => {
+            window.location.href = "sapi.html";
+          }, 3000); // Redirect after 3 seconds
+        } else {
+          wrongAnswerCount++;
+          document.getElementById("answer").innerText = "Salah! Coba lagi.";
+          document.getElementById("answer").classList.add("error");
+
+          if (wrongAnswerCount >= 3) {
+            document.getElementById("nyerahQuestion").style.display = "block";
+            document.getElementById("nyerahBtns").style.display = "flex";
+          }
+        }
+      }
+
+      function showFinalAlert() {
+        document.getElementById("finalMessage").style.display = "block";
+        document.getElementById("cowImage").style.display = "block";
+        playSound(); // Mainkan suara sapi otomatis
+        showAlert(); // Tampilkan alert otomatis
+      }
+
+      function playSound() {
+        var audio = new Audio("asset/shocked-sound-effect.mp3");
+        audio
+          .play()
+          .catch((error) => console.error("Error memutar suara:", error));
+      }
+
+      function iya(id) {
+        var i = Math.random() * (window.innerWidth - id.offsetWidth);
+        var j = Math.random() * (window.innerHeight - id.offsetHeight);
+        id.style.position = "absolute";
+        id.style.left = i + "px";
+        id.style.top = j + "px";
+      }
+
+      function showAlert() {
+        document.getElementById("alertBox").style.display = "block";
+      }
+
+      function closeAlert() {
+        document.getElementById("alertBox").style.display = "none";
+      }
+
+      function checkAnswer() {
+        var userAnswer = document
+          .getElementById("userInput")
+          .value.toLowerCase();
+
+        if (userAnswer === "") {
+          document.getElementById("answer").innerText =
+            "ish ish ish! Coba isi dulu ya sapi";
+          document.getElementById("answer").classList.add("error");
+          return;
+        }
+
+        var correctAnswer = questions[currentQuestionIndex].answer;
+
+        if (userAnswer === correctAnswer) {
+          document.getElementById("answer").innerText =
+            "Selamat! Jawaban Anda benar!";
+          document.getElementById("answer").classList.remove("error");
+          document.getElementById("answer").classList.add("success");
+          currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+          document.getElementById("question").innerText =
+            questions[currentQuestionIndex].question;
+          document.getElementById("userInput").value = ""; // Kosongkan input
+          correctAnswersCount++;
+
+          // Cek apakah semua pertanyaan telah dijawab dengan benar
+          if (correctAnswersCount === questions.length) {
+            showFinalAlert(); // Tampilkan alert otomatis setelah semua pertanyaan terjawab dengan benar
+            document.getElementById("nyerahQuestion").style.display = "none"; // Sembunyikan opsi nyerah
+            document.getElementById("nyerahBtns").style.display = "none"; // Sembunyikan tombol nyerah
+            
+            // Tambahkan redirect ke halaman sapi.html
+            setTimeout(() => {
+                window.location.href = "sapi.html";
+            }, 3000); // Redirect setelah 3 detik (opsional, bisa disesuaikan waktunya)
+        }
+        
+        } else {
+          wrongAnswerCount++;
+          document.getElementById("answer").innerText = "Salah! Coba lagi.";
+          document.getElementById("answer").classList.add("error");
+
+          if (wrongAnswerCount >= 3) {
+            document.getElementById("nyerahQuestion").style.display = "block";
+            document.getElementById("nyerahBtns").style.display = "flex";
+          }
+        }
+      }
+    </script>
+    
+  </body>
+</html>

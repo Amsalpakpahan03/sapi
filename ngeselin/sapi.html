@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gambar Sapi dengan Suara</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f0f0;
+        }
+
+        #cowImage {
+            width: 300px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        #cowImage:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #4CAF50;
+        }
+
+        .alert {
+            display: none; /* Secara default disembunyikan */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .alert1 {
+            display: none; /* Secara default disembunyikan */
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FF9800;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .alert button, .alert1 button {
+            background-color: white;
+            color: #f44336;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .alert button:hover, .alert1 button:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>mau dengar suara sapi betmut? coba klik gambar sapi ini</h1>
+    <img id="cowImage" src="asset/DSC05320.JPG" alt="Gambar Sapi" onclick="playSound()">
+    
+    <!-- Alert yang disembunyikan secara default -->
+    <div id="alert" class="alert">
+        <p>udh ahh, kacian nanti tambah betmut</p>
+        <button onclick="closeAlert()">hmm</button>
+    </div>
+
+    <!-- Alert kedua -->
+    <div id="alert1" class="alert1">
+        <p>ihh masih di sini sapi betah amat</p>
+        <button onclick="closeAlert1()">hmm</button>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let interactionTimeout;
+        let alertTimeout;
+
+        // Fungsi untuk memainkan suara dan meningkatkan clickCount
+        function playSound() {
+            var audio = new Audio("asset/SAPI.MP3");
+            audio.play().catch((error) => console.error("Error memutar suara:", error));
+
+            clickCount++;
+
+            // Resetkan timer interaksi jika pengguna mengklik gambar
+            clearTimeout(interactionTimeout);
+
+            // Mulai timer kembali setelah interaksi
+            interactionTimeout = setTimeout(showAlert, 20000); // Tunggu 5 detik tanpa interaksi
+            alertTimeout = setTimeout(showAlert1, 20000); // Tambahkan timer untuk alert1
+
+            if (clickCount === 4) {
+                // Tampilkan alert
+                document.getElementById('alert').style.display = 'block';
+                clickCount = 0; // Reset counter setelah 4 klik
+            }
+        }
+
+        // Fungsi untuk menampilkan alert
+        function showAlert() {
+            document.getElementById('alert').style.display = 'block';
+        }
+
+        // Fungsi untuk menampilkan alert1
+        function showAlert1() {
+            document.getElementById('alert1').style.display = 'block';
+        }
+
+        // Fungsi untuk menutup alert
+        function closeAlert() {
+            document.getElementById('alert').style.display = 'none';
+        }
+
+        // Fungsi untuk menutup alert1
+        function closeAlert1() {
+            document.getElementById('alert1').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
